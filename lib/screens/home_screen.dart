@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
-    Provider.of<ToDoProvider>(context).getAllData();
+    Provider.of<ToDoProvider>(context, listen: false).getAllData();
     super.initState();
   }
 
