@@ -13,6 +13,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    Provider.of<ToDoProvider>(context).getAllData();
+    super.initState();
+  }
+
   DateTime now = DateTime.now();
 
   void openPicker(BuildContext context) {
@@ -41,7 +47,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ToDoProvider>(context).addToBaza();
     return Scaffold(
       appBar: AppBar(
         title: const Text("To Do app"),
