@@ -105,34 +105,4 @@ class ToDoProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
-  // Future<void> changeIsDoneWithDb(String rId, String newIsDone) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   if (prefs.containsKey('data')) {
-  //     final dataJson = prefs.getString('data');
-  //     final List data = jsonDecode(dataJson!);
-
-  //     final dataIndex = data.indexWhere((element) => element['rId'] == rId);
-
-  //     data[dataIndex]['isDone'] = newIsDone;
-
-  //     final data1 = jsonEncode(data);
-  //     await prefs.setString('data', data1);
-
-  //     List<ToDo> _list1 = [];
-  //     for (var element in data) {
-  //       _list1.add(
-  //         ToDo(
-  //           rId: element['rId'],
-  //           title: element["title"],
-  //           date: DateTime.parse(
-  //             element['date'],
-  //           ),
-  //         ),
-  //       );
-  //     }
-  //     _list = _list1;
-  //   }
-  //   notifyListeners();
-  // }
 }
