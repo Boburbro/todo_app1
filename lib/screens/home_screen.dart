@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("To Do app"),
+        title: const Text("Cheksiz"),
       ),
       drawer: const AppDrawer(onScreen: 'home',),
       body: isLoading
