@@ -11,6 +11,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      surfaceTintColor: Colors.white,
       child: Column(
         children: [
           AppBar(
@@ -19,40 +20,46 @@ class AppDrawer extends StatelessWidget {
             automaticallyImplyLeading: false,
           ),
           const SizedBox(height: 10),
-          BuildTitleWidget(
-            onScreen: onScreen,
-            icon: Icons.home,
-            name: "Home",
-            onTap: () {
-              if (onScreen == 'home') {
-                Navigator.of(context).pop();
-              } else {
-                Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(
-                    builder: (_) => const Home(),
-                  ),
-                );
-              }
-            },
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                BuildTitleWidget(
+                  onScreen: onScreen,
+                  icon: Icons.home,
+                  name: "Home",
+                  onTap: () {
+                    if (onScreen == 'home') {
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                        CupertinoPageRoute(
+                          builder: (_) => const Home(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
+                BuildTitleWidget(
+                  onScreen: onScreen,
+                  icon: Icons.task_alt_rounded,
+                  name: "All tasks",
+                  onTap: () {
+                    if (onScreen == 'all-tasks') {
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                        CupertinoPageRoute(
+                          builder: (_) => const AllTasks(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          BuildTitleWidget(
-            onScreen: onScreen,
-            icon: Icons.task_alt_rounded,
-            name: "All tasks",
-            onTap: () {
-              if (onScreen == 'all-tasks') {
-                Navigator.of(context).pop();
-              } else {
-                Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(
-                    builder: (_) => const AllTasks(),
-                  ),
-                );
-              }
-            },
-          ),
-          
         ],
       ),
     );

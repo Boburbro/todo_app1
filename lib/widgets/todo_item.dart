@@ -38,20 +38,20 @@ class ToDoItem extends StatelessWidget {
                   builder: (ctx) {
                     return AlertDialog(
                       content: const Text(
-                        "Bu vazifani o'chirmoqchimisiz?",
+                        "Would you like to delete it?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(ctx).pop(),
-                          child: const Text("BEKOR QILISH"),
+                          child: const Text("CANCEL"),
                         ),
                         ElevatedButton(
                             onPressed: () {
                               deleteToDo(todoData.rId);
                               Navigator.of(ctx).pop();
                             },
-                            child: const Text("Ha"))
+                            child: const Text("YES"))
                       ],
                     );
                   });

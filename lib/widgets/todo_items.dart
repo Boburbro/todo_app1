@@ -12,24 +12,23 @@ class ToDoItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ToDoProvider>(context);
-    final dataList = Provider.of<ToDoProvider>(context, listen: false).list(now);
+    final dataList =
+        Provider.of<ToDoProvider>(context, listen: false).list(now);
     return Expanded(
       child: dataList.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    "assets/img.png",
-                    width: 200,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Bu kuni rejalar yo'q!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                  )
-                ],
-              ),
+          ? Column(
+              children: [
+                const SizedBox(height: 50),
+                Image.asset(
+                  "assets/img.png",
+                  width: 200,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "No tasks on this day!",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                ),
+              ],
             )
           : ListView.builder(
               itemCount: dataList.length,

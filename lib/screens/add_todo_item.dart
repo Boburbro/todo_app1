@@ -16,6 +16,10 @@ class _AddToDoItemState extends State<AddToDoItem> {
   DateTime? selectedDate;
   TextEditingController controller = TextEditingController();
 
+  GlobalKey<FormState> _formKey = GlobalKey();
+
+  var _hasTime = true;
+
   @override
   void initState() {
     if (widget.id.isNotEmpty) {
@@ -36,11 +40,22 @@ class _AddToDoItemState extends State<AddToDoItem> {
     ).then((time) {
       setState(() {
         selectedDate = time;
+        _hasTime = true;
       });
     });
   }
 
+  void vol() {
+    if (selectedDate == null) {
+      setState(() {
+        _hasTime = false;
+      });
+    }
+  }
+
   void save() {
+    vol();
+    _formKey.currentState!.validate();
     if (selectedDate == null || controller.text.isEmpty) {
       return;
     }
@@ -75,42 +90,55 @@ class _AddToDoItemState extends State<AddToDoItem> {
         ),
         child: SizedBox(
           width: double.infinity,
-          child: Column(
-            children: [
-              TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Nomi"),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  selectedDate == null
-                      ? const Text("Kun tanlanmagan")
-                      : Text(
-                          DateFormat("EEE, d MMM yyy").format(selectedDate!)),
-                  TextButton(
-                    onPressed: () => openKalendar(context),
-                    child: const Text('Kunni tanlsh'),
-                  )
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text("BEKOR QILISH"),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "It should not be empty";
+                    }
+                  },
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    label: Text("Name"),
                   ),
-                  ElevatedButton(
-                      onPressed: () => save(), child: const Text("SAQLASH"))
-                ],
-              )
-            ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    selectedDate == null
+                        ? Text(
+                            "Day not selected",
+                            style: TextStyle(
+                              color: _hasTime ? null : Colors.red,
+                            ),
+                          )
+                        : Text(
+                            DateFormat("EEE, d MMM yyy").format(selectedDate!)),
+                    TextButton(
+                      onPressed: () => openKalendar(context),
+                      child: const Text('Select day'),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("CANCEL"),
+                    ),
+                    ElevatedButton(
+                        onPressed: () => save(), child: const Text("SAVE"))
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

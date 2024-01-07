@@ -19,70 +19,88 @@ class AllTasks extends StatelessWidget {
         centerTitle: true,
       ),
       drawer: const AppDrawer(onScreen: 'all-tasks'),
-      body: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: data.allList.length,
-          itemBuilder: (ctx, index) {
-            final subData = data.allList[index];
-            return Card(
-              child: ListTile(
-                title: Text(subData.title),
-                subtitle:
-                    Text(DateFormat("EEEE, dd.MM.y").format(subData.date)),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) {
-                            return AlertDialog(
-                              content: const Text(
-                                "Bu vazifani o'chirmoqchimisiz?",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(ctx).pop(),
-                                  child: const Text("BEKOR QILISH"),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      data.deleteToDo(subData.rId);
-                                      Navigator.of(ctx).pop();
-                                    },
-                                    child: const Text("Ha"))
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.delete_forever_rounded,
-                        color: Colors.red,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          isDismissible: false,
-                          context: context,
-                          builder: (ctx) {
-                            return AddToDoItem(
-                              id: subData.rId,
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.edit_rounded),
-                    ),
-                  ],
-                ),
+      body: data.allList.isEmpty
+          ? Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 50),
+                  Image.asset(
+                    "assets/img.png",
+                    width: 200,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "No tasks on this day!",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+                ],
               ),
-            );
-          }),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: data.allList.length,
+              itemBuilder: (ctx, index) {
+                final subData = data.allList[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(subData.title),
+                    subtitle:
+                        Text(DateFormat("EEEE, dd.MM.y").format(subData.date)),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) {
+                                return AlertDialog(
+                                  content: const Text(
+                                    "Would you like to delete it?",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(ctx).pop(),
+                                      child: const Text("CANCEL"),
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          data.deleteToDo(subData.rId);
+                                          Navigator.of(ctx).pop();
+                                        },
+                                        child: const Text("Ha"))
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.delete_forever_rounded,
+                            color: Colors.red,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              context: context,
+                              builder: (ctx) {
+                                return AddToDoItem(
+                                  id: subData.rId,
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.edit_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
     );
   }
 }
