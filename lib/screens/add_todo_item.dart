@@ -16,6 +16,7 @@ class _AddToDoItemState extends State<AddToDoItem> {
   DateTime? selectedDate;
   TextEditingController controller = TextEditingController();
 
+  // ignore: prefer_final_fields
   GlobalKey<FormState> _formKey = GlobalKey();
 
   var _hasTime = true;
@@ -99,6 +100,7 @@ class _AddToDoItemState extends State<AddToDoItem> {
                     if (value == null || value.isEmpty) {
                       return "It should not be empty";
                     }
+                    return null;
                   },
                   controller: controller,
                   decoration: const InputDecoration(
