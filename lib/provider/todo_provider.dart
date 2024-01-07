@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app/provider/sql_helper.dart';
 
 import '../models/todo.dart';
 
@@ -27,82 +26,40 @@ class ToDoProvider with ChangeNotifier {
     return [list(time).length.toString(), doneList(time).length.toString()];
   }
 
-  Future<void> deleteToDo(String toDoId) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (prefs.containsKey('data')) {
-      _list.removeWhere((toDo) => toDoId == toDo.rId);
-      // ignore: no_leading_underscores_for_local_identifiers
-      List<Map<String, dynamic>> _newList = [];
-      for (var element in _list) {
-        _newList.add({
-          'rId': element.rId,
-          'title': element.title,
-          'date': element.date.toIso8601String(),
-          "isDoen": element.isDone.toString()
-        });
-      }
-      final data = jsonEncode(_newList);
-      await prefs.setString('data', data);
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> addNewToDo(String title, DateTime time) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('data')) {
-      final rId = UniqueKey().toString();
-      final data = jsonEncode([
-        {"rId": rId, "title": title, "date": time.toIso8601String()}
-      ]);
-      await prefs.setString('data', data);
-      _list.add(ToDo(rId: rId, title: title, date: time));
-    } else {
-      final rId = UniqueKey().toString();
-      // ignore: no_leading_underscores_for_local_identifiers
-      List<Map<String, dynamic>> _newList = [];
-      // ignore: avoid_function_literals_in_foreach_calls
-      _list.forEach((element) {
-        _newList.add({
-          'rId': element.rId,
-          'title': element.title,
-          'date': element.date.toIso8601String(),
-          "isDoen": element.isDone.toString()
-        });
-      });
-      _newList.add({
-        "rId": rId,
-        "title": title,
-        "date": time.toIso8601String(),
-        "isDone": "false"
-      });
-      final data = jsonEncode(_newList);
-      await prefs.setString('data', data);
-      _list.add(ToDo(rId: rId, title: title, date: time));
-    }
-    notifyListeners();
-  }
-
   Future<void> getAllData() async {
-    _list = [];
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('data')) {
-      final dataJson = prefs.getString('data');
-      final List data = jsonDecode(dataJson!);
+    final data = await SqlHelper.getItems();
+    if (data.isNotEmpty) {
       for (var element in data) {
         _list.add(
           ToDo(
-            rId: element['rId'],
+            rId: element['id'],
             title: element["title"],
-            date: DateTime.parse(
-              element['date'],
-            ),
-            isDone: element['isDone'],
+            date: DateTime.parse(element['date']),
+            isDone: bool.parse(element['isDone']),
           ),
         );
       }
     }
+    notifyListeners();
+  }
+
+  Future<void> deleteToDo(String id) async {
+    try {
+      await SqlHelper.deleteItem(id);
+      _list.removeWhere((element) => element.rId == id);
+    } catch (e) {
+      rethrow;
+    }
+    notifyListeners();
+  }
+
+  Future<void> addNewToDo(String title, DateTime time) async {
+    final String id = UniqueKey().toString();
+    await SqlHelper.createItem(id, title, time.toIso8601String(), 'false')
+        .then((value) {
+      _list.add(ToDo(rId: id, title: title, date: time));
+    });
+
     notifyListeners();
   }
 }

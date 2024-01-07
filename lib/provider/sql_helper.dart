@@ -7,10 +7,13 @@ class SqlHelper {
   }
 
   static Future<sql.Database> db() async {
-    return sql.openDatabase('baza.db', version: 1,
-        onCreate: (sql.Database database, int version) async {
-      await createTables(database);
-    });
+    return sql.openDatabase(
+      'baza.db',
+      version: 1,
+      onCreate: (sql.Database database, int version) async {
+        await createTables(database);
+      },
+    );
   }
 
   static Future<int> createItem(

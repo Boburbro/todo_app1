@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:convert';
+import 'package:todo_app/provider/sql_helper.dart';
 
 class ToDo with ChangeNotifier {
   final String rId;
@@ -17,25 +15,13 @@ class ToDo with ChangeNotifier {
   });
 
   Future<void> changeIsDone() async {
-    final prefs = await SharedPreferences.getInstance();
-    var old = isDone;
-    isDone = !old;
+    var oldData = isDone;
     try {
-      if (prefs.containsKey('data')) {
-        final dataJson = prefs.getString('data');
-        final List data = jsonDecode(dataJson!);
-
-        final dataIndex = data.indexWhere((element) => element['rId'] == rId);
-
-        data[dataIndex]['isDone'] = !old;
-
-        final data1 = jsonEncode(data);
-
-        await prefs.setString('data', data1);
-      }
+      await SqlHelper.updateItem(
+              rId, title, date.toIso8601String(), "${!oldData}")
+          .then((value) => isDone = !oldData);
     } catch (e) {
-      print(e);
-      isDone = old;
+      isDone = oldData;
     }
     notifyListeners();
   }

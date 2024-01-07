@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // ignore: camel_case_types
-class appBar extends StatelessWidget {
-  const appBar({
+class HomeAppBar extends StatelessWidget {
+  const HomeAppBar({
     required this.openPicker,
     required this.now,
     required this.addDay,

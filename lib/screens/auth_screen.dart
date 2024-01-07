@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, prefer_final_fields
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
@@ -12,14 +14,11 @@ class AuthScreen extends StatefulWidget {
 enum AuthMode { Login, Register }
 
 class _AuthScreenState extends State<AuthScreen> {
-  // ignore: unused_field
   GlobalKey<FormState> _formKey = GlobalKey();
-  // ignore: prefer_final_fields
   var _loading = false;
 
   AuthMode _authMode = AuthMode.Login;
 
-  // ignore: prefer_final_fields
   Map<String, String> _authData = {
     'email': '',
     'password': '',

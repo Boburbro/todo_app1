@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider/todo_provider.dart';
-import '../widgets/appBar.dart';
-import '../widgets/todo_items.dart';
+
 import 'add_todo_item.dart';
+
+import '../provider/todo_provider.dart';
+import '../widgets/home_appBar.dart';
+import '../widgets/todo_items.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,13 +17,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  DateTime now = DateTime.now();
+  var isLoading = true;
+
   @override
   void initState() {
-    Provider.of<ToDoProvider>(context, listen: false).getAllData();
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<ToDoProvider>(context, listen: false)
+        .getAllData()
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.initState();
   }
-
-  DateTime now = DateTime.now();
 
   void openPicker(BuildContext context) {
     showDatePicker(
@@ -51,23 +65,30 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text("To Do app"),
       ),
-      drawer: Drawer(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            appBar(
-              openPicker: openPicker,
-              now: now,
-              addDay: addOneDay,
-              minusDay: minusOneDay,
+      drawer: const Drawer(),
+      body: isLoading
+          ? const Center(
+              child: CupertinoActivityIndicator(
+                color: CupertinoColors.activeBlue,
+                radius: 20,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  HomeAppBar(
+                    openPicker: openPicker,
+                    now: now,
+                    addDay: addOneDay,
+                    minusDay: minusOneDay,
+                  ),
+                  ToDoItems(
+                    now: now,
+                  ),
+                ],
+              ),
             ),
-            ToDoItems(
-              now: now,
-            ),
-          ],
-        ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
