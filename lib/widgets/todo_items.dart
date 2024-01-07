@@ -12,7 +12,7 @@ class ToDoItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ToDoProvider>(context);
-    final dataList = data.list(now);
+    final dataList = Provider.of<ToDoProvider>(context, listen: false).list(now);
     return Expanded(
       child: dataList.isEmpty
           ? Center(

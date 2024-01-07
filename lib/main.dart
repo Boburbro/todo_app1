@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-// import 'package:todo_app/screens/auth_screen.dart';
 
 import './screens/home_screen.dart';
 import 'provider/todo_provider.dart';

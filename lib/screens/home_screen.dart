@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/widgets/app_drawer.dart';
 
 import 'add_todo_item.dart';
 
@@ -65,7 +66,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text("To Do app"),
       ),
-      drawer: const Drawer(),
+      drawer: const AppDrawer(onScreen: 'home',),
       body: isLoading
           ? const Center(
               child: CupertinoActivityIndicator(
@@ -96,7 +97,7 @@ class _HomeState extends State<Home> {
             isDismissible: false,
             context: context,
             builder: (ctx) {
-              return const AddToDoItem();
+              return const AddToDoItem(id: '',);
             },
           );
         },

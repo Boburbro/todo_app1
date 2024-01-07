@@ -26,9 +26,19 @@ class ToDoProvider with ChangeNotifier {
     return [list(time).length.toString(), doneList(time).length.toString()];
   }
 
+  List<ToDo> get allList {
+    getAllData();
+    return _list;
+  }
+
+  ToDo item(String id) {
+    return _list.firstWhere((element) => element.rId == id);
+  }
+
   Future<void> getAllData() async {
     final data = await SqlHelper.getItems();
     if (data.isNotEmpty) {
+      _list.clear();
       for (var element in data) {
         _list.add(
           ToDo(
@@ -60,6 +70,25 @@ class ToDoProvider with ChangeNotifier {
       _list.add(ToDo(rId: id, title: title, date: time));
     });
 
+    notifyListeners();
+  }
+
+  Future<void> updateItem(
+    String id,
+    String title,
+    DateTime time,
+    bool isDone,
+  ) async {
+    try {
+      await SqlHelper.updateItem(
+        id,
+        title,
+        time.toIso8601String(),
+        "$isDone",
+      );
+    } catch (e) {
+      rethrow;
+    }
     notifyListeners();
   }
 }

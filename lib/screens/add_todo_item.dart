@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../provider/todo_provider.dart';
 
 class AddToDoItem extends StatefulWidget {
-  const AddToDoItem({super.key});
+  const AddToDoItem({required this.id, super.key});
+
+  final String id;
 
   @override
   State<AddToDoItem> createState() => _AddToDoItemState();
@@ -13,6 +15,17 @@ class AddToDoItem extends StatefulWidget {
 class _AddToDoItemState extends State<AddToDoItem> {
   DateTime? selectedDate;
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.id.isNotEmpty) {
+      final data =
+          Provider.of<ToDoProvider>(context, listen: false).item(widget.id);
+      selectedDate = data.date;
+      controller.text = data.title;
+    }
+    super.initState();
+  }
 
   void openKalendar(BuildContext context) {
     showDatePicker(
@@ -31,8 +44,20 @@ class _AddToDoItemState extends State<AddToDoItem> {
     if (selectedDate == null || controller.text.isEmpty) {
       return;
     }
-    Provider.of<ToDoProvider>(context, listen: false)
-        .addNewToDo(controller.text, selectedDate!);
+    if (widget.id.isNotEmpty) {
+      final isDone = Provider.of<ToDoProvider>(context, listen: false)
+          .item(widget.id)
+          .isDone;
+      Provider.of<ToDoProvider>(context, listen: false).updateItem(
+        widget.id,
+        controller.text,
+        selectedDate!,
+        isDone,
+      );
+    } else {
+      Provider.of<ToDoProvider>(context, listen: false)
+          .addNewToDo(controller.text, selectedDate!);
+    }
     Navigator.of(context).pop();
   }
 
