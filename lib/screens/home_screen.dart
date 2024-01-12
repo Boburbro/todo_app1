@@ -9,7 +9,6 @@ import '../provider/todo_provider.dart';
 import '../widgets/home_appBar.dart';
 import '../widgets/todo_items.dart';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -64,9 +63,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cheksiz"),
+        title: const Text("Tengsiz"),
       ),
-      drawer: const AppDrawer(onScreen: 'home',),
+      drawer: const AppDrawer(
+        onScreen: 'home',
+      ),
       body: isLoading
           ? const Center(
               child: CupertinoActivityIndicator(
@@ -97,7 +98,9 @@ class _HomeState extends State<Home> {
             isDismissible: false,
             context: context,
             builder: (ctx) {
-              return const AddToDoItem(id: '',);
+              return const AddToDoItem(
+                id: '',
+              );
             },
           );
         },
